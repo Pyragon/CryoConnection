@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.cryo.utils.ConnectionUtils.*;
@@ -65,6 +66,10 @@ public class DBConnection {
                     stmt.setTimestamp(index, new Timestamp((long) obj));
                 else if(obj instanceof Timestamp)
                     stmt.setTimestamp(index, (Timestamp) obj);
+                else if(obj instanceof Date)
+                    stmt.setDate(index, new java.sql.Date(((Date) obj).getTime()));
+                else if(obj instanceof java.sql.Date)
+                    stmt.setDate(index, (java.sql.Date) obj);
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
             }
