@@ -20,6 +20,25 @@ A properties file must be present within a 'data' folder with the following valu
 }
 ```
 
+### Maven:
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.github.Pyragon</groupId>
+        <artifactId>CryoConnection</artifactId>
+        <version>5c024c5</version>
+    </dependency>
+</dependencies>
+```
+
 ## Getting Started
 To get started, create an instance of [ConnectionManager](src/main/java/com/cryo/ConnectionManager.java).
 
