@@ -284,7 +284,8 @@ public class DBConnection {
         try {
             Connection connection = getConnection();
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
-            setParams(stmt, values);
+            if(values != null)
+                setParams(stmt, values);
             stmt.execute();
             returnConnection(connection);
         } catch (SQLException e) {
@@ -300,10 +301,10 @@ public class DBConnection {
         execute(builder.toString());
     }
 
-    public void update(String database, String clause, Object clazz, String[] replacementsS, Object... vals) {
+    public void update(String database, String clause, Object clazz, String[] replacementsS, Object... values) {
         try {
             StringBuilder builder = new StringBuilder();
-            ArrayList<Object> values = new ArrayList<>();
+            ArrayList<Object> vals = new ArrayList<>();
             List<String> replacements = Arrays.asList(replacementsS);
             for(Field field : clazz.getClass().getDeclaredFields()) {
                 if(!replacements.contains(field.getName())) continue;
@@ -315,10 +316,10 @@ public class DBConnection {
                         name = value;
                 }
                 builder.append(name+"=?,");
-                values.add(field.get(clazz));
+                vals.add(field.get(clazz));
             }
-            values.addAll(Arrays.asList(vals));
-            set(database, builder.substring(0, builder.length()-1), clause, values.toArray());
+            vals.addAll(Arrays.asList(values));
+            set(database, builder.substring(0, builder.length()-1), clause, vals.toArray());
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -340,7 +341,8 @@ public class DBConnection {
         try {
             Connection connection = getConnection();
             PreparedStatement stmt = connection.prepareStatement(query);
-            setParams(stmt, values);
+            if(values != null)
+                setParams(stmt, values);
             stmt.execute();
             stmt.close();
             returnConnection(connection);
@@ -367,7 +369,8 @@ public class DBConnection {
         try {
             Connection connection = getConnection();
             @Cleanup PreparedStatement statement = connection.prepareStatement(query);
-            setParams(statement, values);
+            if(values != null)
+                setParams(statement, values);
             @Cleanup ResultSet set = statement.executeQuery();
             returnConnection(connection);
             if (set != null)
