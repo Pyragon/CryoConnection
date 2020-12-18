@@ -17,7 +17,7 @@ public class InsertPerson {
         DBConnection connection = manager.getConnection("test_db");
 
         //Creating a new instance of Person. We leave the id as -1, as this will get inserted into the database as just 'DEFUALT'
-        Person person = new Person(-1, "cody", "smith", getBirthDate());
+        Person person = new Person(-1, "Cody", "Smith", getBirthDate());
 
         //Inserting our person into the database using the data() method taken from MySQLDao and returning the id
         int id = connection.insert("people", person.data());
