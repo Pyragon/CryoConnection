@@ -1,7 +1,10 @@
 # CryoConnection
 Provides an easy to use library for querying MySQL databases.
 
-# README IS A WIP CURRENTLY!
+## Features
+* Connection pooling
+* Reflection loading for easy database->dao functions
+* Prepared statements. No chance for SQL Injection.
 
 ## Setup
 You can get the JAR from the Releases page, or follow the instructions below to add via Maven.
