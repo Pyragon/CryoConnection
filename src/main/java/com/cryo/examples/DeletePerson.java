@@ -6,7 +6,7 @@ import com.cryo.DBConnection;
 public class DeletePerson {
 
     public static void main(String[] args) {
-        //Creating an instance of ConnectionManager
+        //Creating an instance of ConnectionManager. This should only be done once in your project to ensure proper connection pooling.
         ConnectionManager manager = new ConnectionManager();
 
         //Getting an instance of DBConnection using the 'test_db' database
