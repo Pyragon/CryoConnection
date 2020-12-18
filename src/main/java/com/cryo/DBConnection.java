@@ -209,11 +209,11 @@ public class DBConnection {
         return 0;
     }
 
-    public int insert(String database, Object... objects) {
+    public int insert(String database, Object... values) {
         try {
             Connection connection = getConnection();
-            int inserts = objects.length;
-            Object[] objs = objects;
+            int inserts = values.length;
+            Object[] objs = values;
             StringBuilder insert = new StringBuilder();
             for (int i = 0; i < inserts; i++) {
                 Object obj = objs[i];
@@ -237,29 +237,8 @@ public class DBConnection {
             }
             String query = "INSERT INTO `" + database + "` VALUES(" + insert.toString() + ")";
             @Cleanup PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            int index = 0;
-            for (int i = 0; i < inserts; i++) {
-                Object obj = objs[i];
-                if(obj == null) continue;
-                index++;
-                if (obj instanceof String) {
-                    String string = (String) obj;
-                    if (string.equals("DEFAULT") || string.equals("NULL")) {
-                        index--;
-                        continue;
-                    }
-                    stmt.setString(index, (String) obj);
-                } else if (obj instanceof Integer)
-                    stmt.setInt(index, (int) obj);
-                else if(obj instanceof Double)
-                    stmt.setDouble(index, (double) obj);
-                else if(obj instanceof Long)
-                    stmt.setTimestamp(index, new Timestamp((long) obj));
-                else if(obj instanceof Timestamp)
-                    stmt.setTimestamp(index, (Timestamp) obj);
-                else if (obj instanceof Boolean)
-                    stmt.setBoolean(index, (Boolean) obj);
-            }
+            if(values != null)
+                setParams(stmt, values);
 //			System.out.println(stmt);
             stmt.execute();
             @Cleanup ResultSet set = stmt.getGeneratedKeys();
