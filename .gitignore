@@ -11,7 +11,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -23,8 +22,10 @@
 hs_err_pid*
 
 #Intellij
-.idea
+.idea/
 *.iml
+target/
 
 #Custom
 data/props.json
+package.bat
