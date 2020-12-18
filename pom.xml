@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>CryoConnection</artifactId>
-    <version>1.0.0</version>
+    <version>v1.0.1</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
