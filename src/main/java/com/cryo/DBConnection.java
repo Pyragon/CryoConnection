@@ -99,7 +99,7 @@ public class DBConnection {
             @Cleanup ResultSet set = stmt.executeQuery();
             ArrayList<T> list = new ArrayList<>();
             returnConnection(connection);
-            if (wasNull(set)) return list;
+//            if (wasNull(set)) return list;
             while (next(set))
                 list.add(loadClass(set, c));
             return list;
@@ -129,7 +129,7 @@ public class DBConnection {
                 setParams(stmt, values);
             @Cleanup ResultSet set = stmt.executeQuery();
             returnConnection(connection);
-            if (empty(set)) return null;
+            if(!set.next()) return null;
             return loadClass(set, c);
         } catch (Exception e) {
             e.printStackTrace();
