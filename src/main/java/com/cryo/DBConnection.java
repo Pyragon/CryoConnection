@@ -64,7 +64,7 @@ public class DBConnection {
                 else if(obj instanceof Double)
                     stmt.setDouble(index, (double) obj);
                 else if(obj instanceof Long)
-                    stmt.setTimestamp(index, new Timestamp((long) obj));
+                    stmt.setLong(index, (long) obj);
                 else if(obj instanceof Timestamp)
                     stmt.setTimestamp(index, (Timestamp) obj);
                 else if(obj instanceof Date)
