@@ -8,6 +8,7 @@ import org.apache.commons.pool.ObjectPool;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.sql.*;
 import java.util.ArrayList;
@@ -139,6 +140,13 @@ public class DBConnection {
 
     public <T> T loadClass(ResultSet set, Class<T> c) {
         try {
+            for(Method method : c.getMethods()) {
+                if(method.getName().equals("loadClass")) {
+                    method = c.getMethod("loadClass", ResultSet.class);
+                    if(!Modifier.isStatic(method.getModifiers())) throw new RuntimeException("loadClass method must be static in "+c.getSimpleName());
+                    return (T) method.invoke(null, set);
+                }
+            }
             List<Class<?>> types = new ArrayList<>();
             List<Object> cValues = new ArrayList<>();
             for (Field field : c.getDeclaredFields()) {
