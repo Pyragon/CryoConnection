@@ -5,6 +5,7 @@ import com.cryo.utils.Logger;
 import com.google.common.base.CaseFormat;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool.ObjectPool;
 
 import java.lang.reflect.Constructor;
@@ -20,6 +21,7 @@ import java.util.List;
 import static com.cryo.utils.ConnectionUtils.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @SuppressWarnings("unused")
 public class DBConnection {
 
@@ -40,8 +42,7 @@ public class DBConnection {
             PreparedStatement stmt = connection.prepareStatement(builder.toString());
             if(params != null)
                 setParams(stmt, params);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             stmt.execute();
             returnConnection(connection);
         } catch(Exception e) {
@@ -100,8 +101,7 @@ public class DBConnection {
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             @Cleanup ResultSet set = stmt.executeQuery();
             ArrayList<T> list = new ArrayList<>();
             returnConnection(connection);
@@ -133,8 +133,7 @@ public class DBConnection {
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             @Cleanup ResultSet set = stmt.executeQuery();
             returnConnection(connection);
             if(!set.next()) return null;
@@ -213,8 +212,7 @@ public class DBConnection {
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             @Cleanup ResultSet set = stmt.executeQuery();
             returnConnection(connection);
             if(!set.next()) return 0;
@@ -256,8 +254,7 @@ public class DBConnection {
             @Cleanup PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
 //			System.out.println(stmt);
             stmt.execute();
             @Cleanup ResultSet set = stmt.getGeneratedKeys();
@@ -284,8 +281,7 @@ public class DBConnection {
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             stmt.execute();
             returnConnection(connection);
         } catch (SQLException e) {
@@ -329,8 +325,7 @@ public class DBConnection {
         try {
             Connection connection = getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, statement);
+            log.debug(statement.toString());
             statement.execute();
             statement.close();
             returnConnection(connection);
@@ -345,8 +340,7 @@ public class DBConnection {
             PreparedStatement stmt = connection.prepareStatement(query);
             if(values != null)
                 setParams(stmt, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, stmt);
+            log.debug(stmt.toString());
             stmt.execute();
             stmt.close();
             returnConnection(connection);
@@ -359,8 +353,7 @@ public class DBConnection {
         try {
             Connection connection = getConnection();
             @Cleanup PreparedStatement statement = connection.prepareStatement(query);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, statement);
+            log.debug(statement.toString());
             @Cleanup ResultSet set = statement.executeQuery();
             returnConnection(connection);
             if (set != null)
@@ -377,8 +370,7 @@ public class DBConnection {
             @Cleanup PreparedStatement statement = connection.prepareStatement(query);
             if(values != null)
                 setParams(statement, values);
-            if(ConnectionManager.DEBUG)
-                Logger.log(DBConnection.class, statement);
+            log.debug(statement.toString());
             @Cleanup ResultSet set = statement.executeQuery();
             returnConnection(connection);
             if (set != null)

@@ -25,8 +25,6 @@ public class ConnectionManager {
     @Getter
     private static Gson gson;
 
-    public static boolean DEBUG = false;
-
     public ConnectionManager() {
         gson = buildGson();
         loadProperties();
@@ -49,8 +47,6 @@ public class ConnectionManager {
         String port = properties.getProperty("db-port");
         String user = properties.getProperty("db-user");
         String pass = properties.getProperty("db-pass");
-
-        DEBUG = Boolean.parseBoolean(properties.getProperty("debug", "false"));
 
         PoolableObjectFactory objectFactory = new ConnectionPoolFactory(host, Integer.parseInt(port), schema, user, pass);
         GenericObjectPool.Config config = new GenericObjectPool.Config();
