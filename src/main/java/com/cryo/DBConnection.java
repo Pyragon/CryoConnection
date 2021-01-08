@@ -58,7 +58,7 @@ public class DBConnection {
                 index++;
                 if (obj instanceof String) {
                     String string = (String) obj;
-                    if (string.equals("DEFAULT")) {
+                    if (string.equals("DEFAULT") || string.equals("NULL")) {
                         index--;
                         continue;
                     }
