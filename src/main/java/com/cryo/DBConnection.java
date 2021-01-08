@@ -77,6 +77,8 @@ public class DBConnection {
                     stmt.setDate(index, (java.sql.Date) obj);
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
+                else if(obj == null)
+                    log.error("Object is null.");
                 else
                     log.error("Unhandled variable type: "+obj.getClass().getSimpleName());
             }
@@ -254,6 +256,8 @@ public class DBConnection {
             }
             String query = "INSERT INTO `" + database + "` VALUES(" + insert.toString() + ")";
             @Cleanup PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            log.debug("Setting parameters: "+values);
+            log.debug("With insert string: "+insert.toString());
             if(values != null)
                 setParams(stmt, values);
             log.debug(stmt.toString());
