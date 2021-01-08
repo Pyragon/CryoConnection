@@ -77,6 +77,8 @@ public class DBConnection {
                     stmt.setDate(index, (java.sql.Date) obj);
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
+                else
+                    log.error("Unhandled variable type: "+obj.getClass().getSimpleName());
             }
         } catch(SQLException e) {
             e.printStackTrace();
