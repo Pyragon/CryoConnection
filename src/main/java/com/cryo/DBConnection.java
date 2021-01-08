@@ -58,7 +58,7 @@ public class DBConnection {
                 index++;
                 if (obj instanceof String) {
                     String string = (String) obj;
-                    if (string.equals("DEFAULT")) {
+                    if (string.equals("DEFAULT") || string.equals("NULL")) {
                         index--;
                         continue;
                     }
@@ -256,7 +256,7 @@ public class DBConnection {
             }
             String query = "INSERT INTO `" + database + "` VALUES(" + insert.toString() + ")";
             @Cleanup PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            log.debug("Setting parameters: "+values);
+            log.debug("Setting parameters: "+Arrays.toString(values));
             log.debug("With insert string: "+insert.toString());
             if(values != null)
                 setParams(stmt, values);
