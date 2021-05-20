@@ -1,12 +1,12 @@
 package com.cryo;
 
 import com.cryo.entities.MySQLRead;
-import com.cryo.utils.Logger;
 import com.google.common.base.CaseFormat;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool.ObjectPool;
+import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -161,6 +161,7 @@ public class DBConnection {
             List<Object> cValues = new ArrayList<>();
             for (Field field : c.getDeclaredFields()) {
                 if (!Modifier.isFinal(field.getModifiers()) && !field.isAnnotationPresent(MySQLRead.class)) continue;
+                if(Logger.class.isAssignableFrom(field.getType())) continue;
                 types.add(field.getType());
                 String name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
                 if (field.isAnnotationPresent(MySQLRead.class)) {
