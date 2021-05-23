@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.slf4j.Logger;
 
 @Data
 public abstract class MySQLDao {
@@ -15,6 +16,8 @@ public abstract class MySQLDao {
         try {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if(!Modifier.isFinal(field.getModifiers()) && !field.isAnnotationPresent(MySQLRead.class))
+                    continue;
+                if(Logger.class.isAssignableFrom(field.getClass()))
                     continue;
                 field.setAccessible(true);
                 Object value = field.get(this);
