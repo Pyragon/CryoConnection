@@ -17,7 +17,7 @@ public abstract class MySQLDao {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if(!Modifier.isFinal(field.getModifiers()) && !field.isAnnotationPresent(MySQLRead.class))
                     continue;
-                if(Logger.class.isAssignableFrom(field.getClass()))
+                if(field.getType().getSimpleName().toLowerCase().contains("logger"))
                     continue;
                 field.setAccessible(true);
                 Object value = field.get(this);

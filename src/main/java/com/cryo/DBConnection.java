@@ -56,6 +56,11 @@ public class DBConnection {
             for (int i = 0; i < params.length; i++) {
                 Object obj = params[i];
                 index++;
+                if(obj.getClass().getSimpleName().toLowerCase().contains("logger")) {
+                    index--;
+                    log.info("Skipped: "+obj.getClass().getSimpleName());
+                    continue;
+                }
                 if (obj instanceof String) {
                     String string = (String) obj;
                     if (string.equals("DEFAULT") || string.equals("NULL")) {
@@ -77,8 +82,6 @@ public class DBConnection {
                     stmt.setDate(index, (java.sql.Date) obj);
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
-                else if(obj == null)
-                    log.error("Object is null.");
                 else
                     log.error("Unhandled variable type: "+obj.getClass().getSimpleName());
             }
@@ -161,7 +164,8 @@ public class DBConnection {
             List<Object> cValues = new ArrayList<>();
             for (Field field : c.getDeclaredFields()) {
                 if (!Modifier.isFinal(field.getModifiers()) && !field.isAnnotationPresent(MySQLRead.class)) continue;
-                if(Logger.class.isAssignableFrom(field.getType())) continue;
+                if(field.getType().getSimpleName().toLowerCase().contains("logger"))
+                    continue;
                 types.add(field.getType());
                 String name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
                 if (field.isAnnotationPresent(MySQLRead.class)) {
@@ -194,7 +198,7 @@ public class DBConnection {
                         cValues.add(getDate(set, name));
                         break;
                     default:
-                        System.out.println("Missing type: " + field.getType().getName().toLowerCase());
+                        log.debug("Missing type: " + field.getType().getName().toLowerCase());
                         break;
                 }
             }
