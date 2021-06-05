@@ -1,5 +1,6 @@
 package com.cryo;
 
+import com.cryo.entities.MySQLDao;
 import com.cryo.entities.MySQLRead;
 import com.google.common.base.CaseFormat;
 import lombok.Cleanup;
@@ -204,6 +205,8 @@ public class DBConnection {
             }
             Constructor<T> constructor = c.getConstructor(types.toArray(new Class<?>[types.size()]));
             T obj = constructor.newInstance(cValues.toArray());
+            if(!(obj instanceof MySQLDao)) return null;
+            ((MySQLDao) obj).init();
             return obj;
         } catch (Exception e) {
             e.printStackTrace();

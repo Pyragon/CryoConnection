@@ -44,4 +44,8 @@ public abstract class MySQLDao {
         return list.toArray();
     }
 
+    public void init() {
+
+    }
+
 }
