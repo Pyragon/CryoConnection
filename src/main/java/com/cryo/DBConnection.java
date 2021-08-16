@@ -238,6 +238,10 @@ public class DBConnection {
 
     public int insert(String database, Object... values) {
         try {
+            if(values.length > 1 && values[0] instanceof MySQLDao) {
+                MySQLDao dao = (MySQLDao) values[0];
+                values = dao.data();
+            }
             Connection connection = getConnection();
             int inserts = values.length;
             Object[] objs = values;
