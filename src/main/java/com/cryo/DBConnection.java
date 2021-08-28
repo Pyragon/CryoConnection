@@ -203,7 +203,7 @@ public class DBConnection {
                         break;
                 }
             }
-            Constructor<T> constructor = c.getConstructor(types.toArray(new Class<?>[types.size()]));
+            Constructor<T> constructor = c.getConstructor(types.toArray(Class<?>[]::new));
             T obj = constructor.newInstance(cValues.toArray());
             if(!(obj instanceof MySQLDao)) return null;
             ((MySQLDao) obj).init();
@@ -238,7 +238,7 @@ public class DBConnection {
 
     public int insert(String database, Object... values) {
         try {
-            if(values.length > 1 && values[0] instanceof MySQLDao) {
+            if(values.length > 0 && values[0] instanceof MySQLDao) {
                 MySQLDao dao = (MySQLDao) values[0];
                 values = dao.data();
             }
