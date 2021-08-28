@@ -203,7 +203,7 @@ public class DBConnection {
                         break;
                 }
             }
-            Constructor<T> constructor = c.getConstructor(types.toArray(Class<?>[]::new));
+            Constructor<T> constructor = c.getConstructor(types.toArray(new Class<?>[types.size()]));
             T obj = constructor.newInstance(cValues.toArray());
             if(!(obj instanceof MySQLDao)) return null;
             ((MySQLDao) obj).init();
