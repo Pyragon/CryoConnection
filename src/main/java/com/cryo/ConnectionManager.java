@@ -20,6 +20,7 @@ import java.util.Properties;
 public class ConnectionManager {
 
     private HashMap<String, ObjectPool> factories;
+    @Getter
     private static Properties properties;
 
     @Getter
