@@ -47,8 +47,11 @@ public class ConnectionManager {
         String port = properties.getProperty("db-port");
         String user = properties.getProperty("db-user");
         String pass = properties.getProperty("db-pass");
+        String server = "mysql";
+        if(properties.contains("db-server"))
+            server = properties.getProperty("db-server");
 
-        PoolableObjectFactory objectFactory = new ConnectionPoolFactory(host, Integer.parseInt(port), schema, user, pass);
+        PoolableObjectFactory objectFactory = new ConnectionPoolFactory(host, Integer.parseInt(port), schema, user, pass, server);
         GenericObjectPool.Config config = new GenericObjectPool.Config();
         config.maxActive = 10;
         config.testOnBorrow = true;

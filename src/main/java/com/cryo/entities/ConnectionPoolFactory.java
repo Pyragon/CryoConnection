@@ -11,19 +11,25 @@ public class ConnectionPoolFactory extends BasePoolableObjectFactory {
     private String schema;
     private String user;
     private String password;
+    private String server;
 
     public ConnectionPoolFactory(String host, int port, String schema,
-                                      String user, String password) {
+                                 String user, String password) {
+        this(host, port, schema, user, password, null);
+    }
+
+    public ConnectionPoolFactory(String host, int port, String schema, String user, String password, String server) {
         this.host = host;
         this.port = port;
         this.schema = schema;
         this.user = user;
         this.password = password;
+        this.server = server;
     }
 
     @Override
     public Object makeObject() throws Exception {
-        String url = "jdbc:mysql://" + host + ":" + port + "/" + schema + "?autoReconnectForPools=true&characterEncoding=latin1&useConfigs=maxPerformance";
+        String url = "jdbc:"+server+"://" + host + ":" + port + "/" + schema + "?autoReconnectForPools=true&characterEncoding=latin1&useConfigs=maxPerformance";
         return DriverManager.getConnection(url, user, password);
     }
 }
