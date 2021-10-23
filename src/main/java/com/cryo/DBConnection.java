@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.pool.ObjectPool;
+import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Constructor;
@@ -85,11 +86,11 @@ public class DBConnection {
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
                 else if(obj instanceof Byte[] || obj instanceof byte[]) {
-                    if(obj instanceof Byte[])
-                        stmt.setBytes(index, ArrayUtils.toPrimitive((Byte[]) obj));
+                    if (obj instanceof Byte[]) stmt.setBytes(index, ArrayUtils.toPrimitive((Byte[]) obj));
+                    else stmt.setBytes(index, (byte[]) obj);
+                } else if(obj instanceof PGobject)
+                    stmt.setObject(index, obj);
                 else
-                        stmt.setBytes(index, (byte[]) obj);
-                } else
                     log.error("Unhandled variable type: "+obj.getClass().getSimpleName());
             }
         } catch(SQLException e) {
