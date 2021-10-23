@@ -6,6 +6,7 @@ import com.google.common.base.CaseFormat;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.pool.ObjectPool;
 import org.slf4j.Logger;
 
@@ -83,7 +84,12 @@ public class DBConnection {
                     stmt.setDate(index, (java.sql.Date) obj);
                 else if (obj instanceof Boolean)
                     stmt.setBoolean(index, (Boolean) obj);
+                else if(obj instanceof Byte[] || obj instanceof byte[]) {
+                    if(obj instanceof Byte[])
+                        stmt.setBytes(index, ArrayUtils.toPrimitive((Byte[]) obj));
                 else
+                        stmt.setBytes(index, (byte[]) obj);
+                } else
                     log.error("Unhandled variable type: "+obj.getClass().getSimpleName());
             }
         } catch(SQLException e) {
@@ -201,6 +207,9 @@ public class DBConnection {
                         break;
                     case "date":
                         cValues.add(getDate(set, name));
+                        break;
+                    case "byte[]":
+                        cValues.add(getBytes(set, name));
                         break;
                     default:
                         log.debug("Missing type: " + field.getType().getName().toLowerCase());

@@ -76,6 +76,15 @@ public class ConnectionUtils {
         return 0;
     }
 
+    public static byte[] getBytes(ResultSet set, String string) {
+        try {
+            return set.getBytes(string);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Date getDate(ResultSet set, String string) {
         try {
             return set.getDate(string);
