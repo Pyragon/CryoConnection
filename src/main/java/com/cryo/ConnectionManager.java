@@ -48,7 +48,7 @@ public class ConnectionManager {
         String user = properties.getProperty("db-user");
         String pass = properties.getProperty("db-pass");
         String server = "mysql";
-        if(properties.contains("db-server"))
+        if(properties.containsKey("db-server"))
             server = properties.getProperty("db-server");
 
         PoolableObjectFactory objectFactory = new ConnectionPoolFactory(host, Integer.parseInt(port), schema, user, pass, server);
