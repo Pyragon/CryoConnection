@@ -30,17 +30,17 @@ public class DBConnection {
     private final ObjectPool pool;
 
     public void set(String database, String update, String clause, Object... params) {
+        String server = ConnectionManager.getProperties().getProperty("db-server");
+        String quote = server.equals("postgresql") ? "\"" : "`";
         if(params == null || params.length == 0) {
-            String query = "UPDATE " + database + " SET " + update + " WHERE " + clause + ";";
+            String query = "UPDATE "+quote + database + quote+" SET " + update + " WHERE " + clause + ";";
             execute(query);
             return;
         }
         try {
-            StringBuilder builder = new StringBuilder();
-            builder.append("UPDATE ").append(database).append(" SET ")
-                    .append(update).append(" WHERE ").append(clause+";");
+            String builder = "UPDATE " + quote + database + quote + " SET " + update + " WHERE " + clause + ";";
             Connection connection = getConnection();
-            PreparedStatement stmt = connection.prepareStatement(builder.toString());
+            PreparedStatement stmt = connection.prepareStatement(builder);
             if(params != null)
                 setParams(stmt, params);
             log.debug(stmt.toString());
@@ -101,9 +101,11 @@ public class DBConnection {
 
     public <T> ArrayList<T> selectList(String table, String condition, String order, Class<T> c, Object... values) {
         try {
+            String server = ConnectionManager.getProperties().getProperty("db-server");
+            String quote = server.equals("postgresql") ? "\"" : "`";
             Connection connection = getConnection();
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT * FROM ").append(table);
+            builder.append("SELECT * FROM ").append(quote + table + quote);
             if (condition != null && !condition.equals("")) builder.append(" WHERE ").append(condition);
             if (order != null && !order.equals("")) builder.append(" " + order);
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
@@ -133,9 +135,11 @@ public class DBConnection {
 
     public <T> T selectClass(String table, String condition, String order, Class<T> c, Object... values) {
         try {
+            String server = ConnectionManager.getProperties().getProperty("db-server");
+            String quote = server.equals("postgresql") ? "\"" : "`";
             Connection connection = getConnection();
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT * FROM ").append(table);
+            builder.append("SELECT * FROM ").append(quote + table + quote);
             if (condition != null && !condition.equals("")) builder.append(" WHERE ").append(condition);
             if (order != null && !order.equals("")) builder.append(" ").append(order);
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
@@ -216,9 +220,11 @@ public class DBConnection {
 
     public int selectCount(String database, String condition, Object...values) {
         try {
+            String server = ConnectionManager.getProperties().getProperty("db-server");
+            String quote = server.equals("postgresql") ? "\"" : "`";
             Connection connection = getConnection();
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT COUNT(*) FROM "+database);
+            builder.append("SELECT COUNT(*) FROM "+quote + database + quote);
             if(condition != null && !condition.equals(""))
                 builder.append(" WHERE ").append(condition);
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
@@ -266,7 +272,9 @@ public class DBConnection {
                 if (i != inserts - 1)
                     insert.append(", ");
             }
-            String query = "INSERT INTO `" + database + "` VALUES(" + insert.toString() + ")";
+            String server = ConnectionManager.getProperties().getProperty("db-server");
+            String quote = server.equals("postgresql") ? "\"" : "`";
+            String query = "INSERT INTO "+quote+"" + database + ""+quote+" VALUES(" + insert + ")";
             @Cleanup PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             log.debug("Setting parameters: "+Arrays.toString(values));
             log.debug("With insert string: "+insert.toString());
@@ -286,14 +294,18 @@ public class DBConnection {
     }
 
     public ResultSet selectAll(String database, String condition) {
+        String server = ConnectionManager.getProperties().getProperty("db-server");
+        String quote = server.equals("postgresql") ? "\"" : "`";
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT * FROM ").append(database).append(" "+condition);
+        builder.append("SELECT * FROM ").append(quote + database + quote).append(" "+condition);
         return executeQuery(builder.toString());
     }
 
     public void delete(String database, String condition, Object...values) {
+        String server = ConnectionManager.getProperties().getProperty("db-server");
+        String quote = server.equals("postgresql") ? "\"" : "`";
         StringBuilder builder = new StringBuilder();
-        builder.append("DELETE FROM ").append(database).append(" WHERE ").append(condition);
+        builder.append("DELETE FROM ").append(quote + database + quote).append(" WHERE ").append(condition);
         try {
             Connection connection = getConnection();
             @Cleanup PreparedStatement stmt = connection.prepareStatement(builder.toString());
@@ -309,8 +321,10 @@ public class DBConnection {
     }
 
     public void delete(String database, String condition) {
+        String server = ConnectionManager.getProperties().getProperty("db-server");
+        String quote = server.equals("postgresql") ? "\"" : "`";
         StringBuilder builder = new StringBuilder();
-        builder.append("DELETE FROM ").append(database).append(condition != null ? " WHERE " : "")
+        builder.append("DELETE FROM ").append(quote + database + quote).append(condition != null ? " WHERE " : "")
                 .append(condition != null ? condition : "");
         execute(builder.toString());
     }
