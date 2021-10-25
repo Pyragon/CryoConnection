@@ -29,3 +29,12 @@ target/
 #Custom
 data/props.json
 package.bat
+.classpath
+.factorypath
+.project
+*.iml
+.gradle/
+.settings
+build
+bin
+log

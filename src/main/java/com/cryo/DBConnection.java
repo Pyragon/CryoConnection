@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.cryo.utils.ConnectionUtils.*;
 
@@ -179,13 +180,15 @@ public class DBConnection {
                 if(field.getType().getSimpleName().toLowerCase().contains("logger"))
                     continue;
                 types.add(field.getType());
-                String name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, field.getName());
+                CaseFormat format = CaseFormat.values()[Integer.parseInt(ConnectionManager.getProperties().getProperty("case_formatter", "1"))];
+                String name = CaseFormat.LOWER_CAMEL.to(format, field.getName());
                 if (field.isAnnotationPresent(MySQLRead.class)) {
                     String value = field.getAnnotation(MySQLRead.class).value();
                     if (!value.equals("null")) name = value;
                 }
                 switch (field.getType().getSimpleName().toLowerCase()) {
                     case "int":
+                    case "integer":
                         cValues.add(getInt(set, name));
                         break;
                     case "string":
@@ -295,8 +298,11 @@ public class DBConnection {
             stmt.execute();
             @Cleanup ResultSet set = stmt.getGeneratedKeys();
             returnConnection(connection);
-            if(set.next())
-                return set.getInt(1);
+            if(!set.next()) {
+                log.debug("No next on set.");
+                return -1;
+            }
+            return set.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }

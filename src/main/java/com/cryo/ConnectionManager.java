@@ -1,19 +1,27 @@
 package com.cryo;
 
+import com.cryo.entities.Asset;
+import com.cryo.entities.AssetData;
 import com.cryo.entities.ConnectionPoolFactory;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Cleanup;
 import lombok.Getter;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.PoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPoolFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -25,6 +33,17 @@ public class ConnectionManager {
 
     @Getter
     private static Gson gson;
+
+    public static void main(String[] args) {
+        try {
+            ConnectionManager manager = new ConnectionManager();
+
+            Asset asset = manager.getConnection("wiki").selectClass("assets", "filename=?", Asset.class, "test-asset.png");
+            System.out.println(asset.getFileName());
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public ConnectionManager() {
         gson = buildGson();
